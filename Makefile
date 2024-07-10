@@ -1,5 +1,5 @@
 NAME = bsq
-SRCS = alloc.c gnl.c gnl_utils.c helper.c main.c map.c solve.c utils.c solve_stdin.c gc_utils.c gc.c
+SRCS = alloc.c gnl.c gnl_utils.c helper.c main.c map.c solve.c utils.c solve_stdin.c gc_utils.c gc.c parse_map_stdin.c
 INCLUDE = .
 OBJS = ${SRCS:.c=.o}
 CFLAGS = -Wall -Werror -Wextra -g3 -fsanitize=address

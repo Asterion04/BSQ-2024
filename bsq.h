@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bsq.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asterion <asterion@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iavautra <iavautra@student.42lausanne.ch>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 17:11:23 by ivautrav          #+#    #+#             */
-/*   Updated: 2024/07/10 11:11:52 by asterion         ###   ########.fr       */
+/*   Updated: 2024/07/10 15:50:07 by iavautra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,8 @@ bool	parse_map(char *file_path, t_full_map *full_map);
 bool	extract_map_info(t_map_info *map_info, char *line);
 
 bool	try_solving_stdin(void);
+bool	parse_map_stdin(t_full_map *full_map);
 
-bool	solve(t_full_map full_map);
 void	find_max_side(int *ij, t_full_map full_map, int **dp, int *max_side);
 int		*find_best_xy(int rows, int cols, int max_side, int **dp);
 void	apply_square(t_full_map full_map, int best_x, int best_y, \

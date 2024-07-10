@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   solve.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asterion <asterion@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iavautra <iavautra@student.42lausanne.ch>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 19:13:07 by asterion          #+#    #+#             */
-/*   Updated: 2024/07/10 11:10:36 by asterion         ###   ########.fr       */
+/*   Updated: 2024/07/10 16:02:09 by iavautra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,18 +87,14 @@ bool	solve(t_full_map full_map)
 
 	dp = (int **) ft_calloc(full_map.info.height * full_map.info.width, \
 		sizeof(int *));
-	i = 0;
+	i = -1;
 	max_side = 0;
-	while (i < full_map.info.height)
+	while (++i < full_map.info.height)
 	{
 		dp[i] = (int *) ft_calloc(full_map.info.width, sizeof(int));
-		j = 0;
-		while (j < full_map.info.width)
-		{
+		j = -1;
+		while (++j < full_map.info.width)
 			find_max_side((int []){i, j}, full_map, dp, &max_side);
-			j++;
-		}
-		i++;
 	}
 	xy = find_best_xy(full_map.info.height, full_map.info.width, max_side, dp);
 	apply_square(full_map, xy[0], xy[1], max_side);

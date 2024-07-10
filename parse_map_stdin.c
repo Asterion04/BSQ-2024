@@ -1,62 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   map.c                                              :+:      :+:    :+:   */
+/*   parse_map_stdin.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: iavautra <iavautra@student.42lausanne.ch>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/09 22:00:56 by iavautra          #+#    #+#             */
-/*   Updated: 2024/07/10 16:03:57 by iavautra         ###   ########.fr       */
+/*   Created: 2024/07/10 15:49:47 by iavautra          #+#    #+#             */
+/*   Updated: 2024/07/10 16:01:34 by iavautra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "bsq.h"
+#include <bsq.h>
 
-bool	extract_map_info(t_map_info *map_info, char *line)
-{
-	int			has_error;
-
-	map_info->height = ft_atoi(line, &has_error);
-	if (has_error)
-		return (false);
-	if (ft_strlen(line) <= 3)
-		return (false);
-	map_info->fill = line[ft_strlen(line) - 2];
-	map_info->obstacle = line[ft_strlen(line) - 3];
-	map_info->empty = line[ft_strlen(line) - 4];
-	return (true);
-}
-
-bool	loop_line_map(int fd, char *line, t_full_map *full_map)
+static bool	loop_line_map_stdin(int fd, char *line, t_full_map *full_map)
 {
 	int		i;
 	char	*tmp;
 
 	tmp = NULL;
 	i = -1;
-	while (line != NULL && ++i < full_map->info.height)
+	while (line != NULL && ++i < full_map->info.height - 1)
 	{
+		full_map->map[i] = gc_strdup(line);
+		line = get_next_line(fd);
 		if ((int) ft_strlen(line) - 1 != full_map->info.width)
 		{
 			free(line);
 			full_map->info.height = i;
 			return (false);
 		}
-		full_map->map[i] = gc_strdup(line);
-		line = get_next_line(fd);
 	}
 	if (line != NULL)
-		free(line);
-	while (tmp != NULL)
-	{
-		tmp = get_next_line(fd);
-		free(tmp);
-	}
-	full_map->info.height = i;
+		full_map->map[i] = gc_strdup(line);
 	return (true);
 }
 
-bool	read_map(int fd, t_full_map *full_map)
+static bool	read_map_stdin(int fd, t_full_map *full_map)
 {
 	char	*line;
 
@@ -69,30 +48,24 @@ bool	read_map(int fd, t_full_map *full_map)
 		free(line);
 		return (false);
 	}
-	full_map->map = (t_map) gc_malloc((unsigned int) full_map->info.height * \
+	full_map->map = (t_map) gc_malloc((unsigned int)full_map->info.height * \
 	full_map->info.width * sizeof(t_map));
-	if (!loop_line_map(fd, line, full_map))
+	if (!loop_line_map_stdin(fd, line, full_map))
 		return (false);
 	return (true);
 }
 
-bool	parse_map(char *file_path, t_full_map *full_map)
+bool	parse_map_stdin(t_full_map *full_map)
 {
 	int		fd;
 	char	*line;
 
-	fd = open(file_path, O_RDONLY);
-	if (fd == -1)
-		return (false);
+	fd = STDIN_FILENO;
 	line = get_next_line(fd);
 	if (line == NULL)
 		return (false);
 	if (!extract_map_info(&full_map->info, line))
 		return (false);
-	if (!read_map(fd, full_map))
-		return (false);
-	if (close(fd) == -1)
-		return (false);
 	free(line);
-	return (true);
+	return (read_map_stdin(fd, full_map));
 }
